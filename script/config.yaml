@@ -1,0 +1,22 @@
+# Fichier de configuration
+#APP
+HOST: 0.0.0.0
+PORT: 5000
+
+#DATABASE
+NAME_DB: db_diagnostic_distant #Saytu_test #
+USER_DB: souxateuserprod #postgres #
+PASSWORD_DB: S0ux@t3Pr0d2021 #Aziz_2030 #
+HOST_DB: 10.137.15.70 #localhost #
+PORT_DB: 5432
+
+#INTEGRATION DE KEYCLOACK
+REALM: Saytu_realm
+CLIENT_ID: saytu_keycloak_python
+CLIENT_SECRET: 5b00ff07-a482-417d-8aff-0e5d83045078
+GRANT_TYPE: client_credentials
+URI_BASE: "https://keycloak-pprod.orange-sonatel.com/auth/"
+URI: "https://keycloak-pprod.orange-sonatel.com/auth/realms/Saytu_realm/protocol/openid-connect/token"
+URI_USER: "https://keycloak-pprod.orange-sonatel.com/auth/admin/realms/saytu_realm/users"
+URI_ROLES: "https://keycloak-pprod.orange-sonatel.com/auth/admin/realms/saytu_realm/roles"
+
