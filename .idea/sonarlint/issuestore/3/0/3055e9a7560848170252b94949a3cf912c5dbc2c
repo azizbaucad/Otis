@@ -1,0 +1,9 @@
+
+6python:S125"Remove this commented out code.(õ²Ğ
+npython:S1542"QRename function "decodeToken" to match the regular expression ^[a-z_][a-z0-9_]*$.(¸”Å”ıÿÿÿÿ
+Tpython:S5754"<Specify an exception class to catch or reraise the exception(ˆÊÉ·
+jpython:S1542&"RRename function "getRoleToken" to match the regular expression ^[a-z_][a-z0-9_]*$.(áâÌŒ
+qpython:S1176"ZRename this local variable "IP_addres" to match the regular expression ^[_a-z][a-z0-9_]*$.(ñËğÔ
+npython:S15424"QRename function "getIpAdress" to match the regular expression ^[a-z_][a-z0-9_]*$.(û÷‘¢ùÿÿÿÿ
+;python:S125H"Remove this commented out code.(—Ë™Ùıÿÿÿÿ
+wpython:S1542O"_Rename function "getDerniereHeureDeCoupure" to match the regular expression ^[a-z_][a-z0-9_]*$.(‰±Àî

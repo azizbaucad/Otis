@@ -3,12 +3,6 @@ from script.conf import *
 import pandas as pd
 from datetime import datetime
 
-
-def simple_inventaire():
-    data = select_query(''' SElect * from historique_diagnostic limit 10 ''')
-    return data
-
-
 # fonction doublon
 def get_doublon():
     numero = request.args.get('numero')
@@ -37,45 +31,6 @@ def get_coupure():
 	                                         FROM maintenance_predictive_ftth WHERE anomalie LIKE '%Coupure%' AND numero = '{}' ''',
                                      numero)
         return data
-
-
-# Historique du taux d'utilisation
-def taux_utilisation():
-    numero = request.args.get('numero')
-    if numero is None or numero == "":
-        data = select_query('''SELECT DISTINCT service_id, offre,vendeur, debitup, debitdown, ip_olt,nom_olt,slot,pon,  created_at::date
-                               FROM inventaireglobal_network_bis''')
-
-        df = pd.DataFrame(data)
-        i = 0
-        for row in df.itertuples():
-            # print(row.offre)
-            if row.offre == "FIBRE BI":
-                debitMoySouscrit = "20 MB"
-                # print(row.offre + "::" + debitMoySouscrit)
-            elif row.offre == "FIBRE MAX":
-                debitMoySouscrit = "40 MB"
-                # print(row.offre + "::" + debitMoySouscrit)
-            elif row.offre == "FIBRE MEGA":
-                debitMoySouscrit = "60 MB"
-                # print(row.offre + "::" + debitMoySouscrit)
-            else:
-                debitMoySouscrit = "100 MB"
-                # print(row.offre + "::" + debitMoySouscrit)
-
-            print(row.service_id + "::" + row.offre + "::" + debitMoySouscrit)
-            data_ = {"service_id": row.service_id, "offre": row.offre, "DebitMoy": debitMoySouscrit}
-            # return datawithdebitsouscrit
-            # return data_
-
-        return data
-        # return datawithdebitsouscrit
-        # return data_
-    else:
-        data = select_query_argument(''' SELECT DISTINCT service_id, offre, debitup, debitdown, ip_olt,nom_olt,slot,pon,  created_at::date
-                                         FROM inventaireglobal_network_bis where  service_id = '{}' ''', numero)
-        return data
-
 
 # Fonction Historique des coupures sur x jours ou x mois
 
