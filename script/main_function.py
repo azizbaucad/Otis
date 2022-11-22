@@ -186,13 +186,7 @@ def resultat_diagnostic():
 # Fonction permettant de faire de la recherche élargie
 def recherche_elargie():
     con = None
-    #text = request.args.get('text')
-    #[text for text in request.args.keys()]
-    #numero = request.args.get('numero')
-    #ip = request.args.get('ip')
-    #vendeur = request.args.get('vendeur')
     text = request.args.get('recherche')
-    #text_int = request.args.get('textint')
 
     try:
         con = connect()
@@ -211,12 +205,6 @@ def recherche_elargie():
         if con is not None:
             con.close()
     return data
-    #else:
-        #return {'message': "Vous devez saisir un text"}
-
-    #try:
-
-
 
 # fonction creation de la table parc_constitution_ftth
 def create_table():
@@ -244,7 +232,6 @@ def create_table():
             cursor.close()
             con.close()
 
-
 # La fonction permettant de stocker sur la table real_time_diagnostic
 def to_real_time_diagnostic(numero):
     vendeur = get_vendeur(numero)
@@ -254,10 +241,3 @@ def to_real_time_diagnostic(numero):
     # Pour les Clients dont le vendeur est Huawei
     if vendeur == 'Huawei':
         configurationClientsHuawei(numero)
-
-# Chargement de la table parc_constitution_ftth
-# if __name__ == '__main__':
-
-
-# fonction derniere heure de coupure
-# def get_derniere_heure_coupure():
