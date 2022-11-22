@@ -34,25 +34,25 @@ URI_BASE = configuration()['URI_BASE']
 
 # Good doublons
 @app.route('/listedoublons', methods=['GET'])
-def GetDoublon():
+def get_doublon_api():
     return get_doublon()
 
 
 # Liste des coupures
 @app.route('/listecoupures', methods=['GET'])
-def GetCoupure():
+def get_coupure_api():
     return get_coupure()
 
 
 # Historique Taux d'utilisation du débit
 @app.route('/historiquetauxutilisation', methods=['GET'])
-def TauxUtilisationDebit():
+def taux_utilisation_debit_api():
     return taux_utilisation_debit()
 
 
 # Historique des coupures
 @app.route('/historiquecoupures', methods=['GET'])
-def GetHistoriqueCoupure():
+def get_historique_coupure_api():
     return get_historique_coupure()
 
 
