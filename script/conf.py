@@ -53,6 +53,12 @@ def select_query(query):
             con.close()
     return data
 
+def truncate_query(query):
+    con = connect()
+    cursor = con.cursor()
+    cursor.execute(query)
+    con.commit()
+
 def select_query_argument(query, numero=None):
     con = None
     #numero = request.args.get('numero')
@@ -74,9 +80,10 @@ def select_query_argument(query, numero=None):
 
 # fonction select avec plusieurs arguments
 def select_query_date_between(query, arg1=None, arg2=None, arg3=None):
-    if arg1 is not None or arg1 == "" or arg2 is not None or arg2 == "":
+    #data = None
+    if arg1 is not None or arg1 == "" or arg2 is not None or arg2 == "" or arg3 is not None or arg3 == "":
         try:
-
+            #duree = arg2 - arg1
             con = connect()
             df = pd.read_sql(query.format(arg1, arg2, arg3), con)
             data = df.to_dict(orient='records')
@@ -89,6 +96,27 @@ def select_query_date_between(query, arg1=None, arg2=None, arg3=None):
         return data
     else:
         return {"Error": "Verifier les arguments entrées !!!"}
+
+
+
+# test des parmas
+# if __name__ == '__main__':
+#     print("-----------------test mes codes-----------------------")
+#     def testclearg(query, *args):
+#         print(".....The query is....................\n")
+#         print(query)
+#         print("\n ........ The arguments is .........")
+#         for i in args:
+#             print(i)
+#
+#
+#     a1 = "Bob"
+#     a2 = [1, 2, 3]
+#     a3 = {'a': 222, 'b': 333, 'c': 444}
+#     testclearg("Select * from Something", a1, a2, a3)
+
+
+    #testclearg(a1, a2, a3, param1=True, param2=12, param3=None)
 
 
 NAME_DB = configuration()["NAME_DB"]

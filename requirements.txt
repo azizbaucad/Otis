@@ -2,7 +2,7 @@ flask-marshmallow==0.14.0
 numpy>=1.19.5
 pysnmp==4.4.12
 pandas>=1.1.5
-psycopg2>=2.9.3
+psycopg2>=2.9.5
 requests>=2.20.0
 flasgger==0.9.5
 PyYAML==6.0
@@ -12,3 +12,4 @@ blinker==1.4
 PyJWT>=2.6.0
 jsonpickle>=2.2.0
 Flask-Cors>=3.0.10
+schedule>=1.1.0
