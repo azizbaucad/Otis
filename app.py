@@ -58,7 +58,7 @@ def get_historique_coupure_api():
 
 # API pemettant de faire le diagnostic à temps réels
 @app.route('/diagnosticnumero', methods=['GET'])
-def diagnostique_number_api():
+def monitoring_api():
     numero = request.args.get('numero')
 
     date_start = request.args.get('dateDebut')
