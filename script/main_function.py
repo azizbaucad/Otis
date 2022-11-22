@@ -11,14 +11,6 @@ from script.confClientsNokia import getProvisioning
 from script.confClientsHuawei import configurationClientsHuawei
 
 
-# import datetime
-
-
-def simple_inventaire():
-    data = select_query(''' SElect * from historique_diagnostic limit 10 ''')
-    return data
-
-
 # fonction doublon
 def get_doublon():
     numero = request.args.get('numero')
@@ -32,7 +24,6 @@ def get_doublon():
         return data
     else:
         return 'Vous devez saisir un numero'
-
 
 
 # Liste des coupures
@@ -173,6 +164,7 @@ def metric_date_between():
     else:
         return "Veuillez saisir les dates"
 
+
 # Fonction permettant de faire le diagnostic à temps réesl
 def monitoring():
     numero = request.args.get('numero')
@@ -230,7 +222,8 @@ def resultat_diagnostic():
     numero = request.args.get('numero')
     if numero is not None:
         # recuperer les données
-        data = select_query_argument(''' SELECT * FROM real_time_diagnostic WHERE numero = '{}' ORDER BY DATE DESC ''', numero)
+        data = select_query_argument(''' SELECT * FROM real_time_diagnostic WHERE numero = '{}' ORDER BY DATE DESC ''',
+                                     numero)
         return data
     else:
         return "Vous devez saisir un numero"
@@ -259,6 +252,20 @@ def recherche_elargie():
             con.close()
     return data
 
+
+# Fonction permettant d'obtenir la derniere heure de coupure
+def derniere_heure_coupure():
+    numero = request.args.get('numero')
+    if numero is not None:
+        data = select_query_argument('''SELECT numero,nom_olt, ip, vendeur, anomalie, criticite, created_at
+                                               FROM maintenance_predictive_ftth
+                                               WHERE numero = '{}' 
+                                               ORDER BY created_at DESC limit 1''', numero)
+        return data
+    else:
+        return "Vous devez saisir un numéro"
+
+
 # fonction creation de la table parc_constitution_ftth
 def create_table():
     con = connect()
@@ -284,6 +291,7 @@ def create_table():
         if con:
             cursor.close()
             con.close()
+
 
 # La fonction permettant de stocker sur la table real_time_diagnostic
 def to_real_time_diagnostic(numero):

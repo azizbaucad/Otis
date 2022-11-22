@@ -4,7 +4,7 @@ from script.function import getDerniereHeureDeCoupure, getIpAdress, log_app, dec
 import os
 from script.conf import add_headers, truncate_query, connect
 from script.main_function import monitoring, get_doublon, get_coupure, get_historique_coupure, taux_utilisation_debit, \
-    metric_date_between, resultat_diagnostic, recherche_elargie, to_real_time_diagnostic
+    metric_date_between, resultat_diagnostic, recherche_elargie, derniere_heure_coupure
 from script.account import configuration, adminToken
 import requests
 import flask
@@ -81,51 +81,9 @@ def metric_date_between_api():
 
 
 # API pour l'affichage de la dernière date de coupure
-@app.route('/derniereheureCoupure', methods=['GET'])
-def get_Heure_Coupure():
-    if request.method == 'GET':
-
-        con = connect()
-        numero = request.args.get('numero')
-        # print(type(numero))
-        # print("le numero saisi est" + numero)
-        if numero is None or numero == "":
-            return getDerniereHeureDeCoupure()
-        else:
-
-            query = '''
-                        Select numero,nom_olt, ip, vendeur, anomalie, criticite, created_at
-                               from maintenance_predictive_ftth
-                               where numero = '{}' 
-                               order by created_at DESC limit 1
-                    '''.format(numero)
-            data_ = pd.read_sql(query, con)
-            print(data_)
-            res = data_.to_dict(orient='records')
-            return res
-
-
-# La fonction de récupération du taux d'ocuupation
-@app.route('/tauxoccupation', methods=['GET'])
-def tauxOccupation():
-    con = connect()
-    dateFrom = request.args.get('dateFrom')
-    dateTo = request.args.get('dateTo')
-
-    if dateFrom is not None and dateFrom != "" and dateTo is not None and dateTo != "":
-
-        query = ''' 
-                    select slot,  pon, nom_olt,created_at::date, count(distinct service_id) 
-                    from inventaireglobal_ftth where created_at::date between '{}' and '{}'
-                    group by pon, slot,nom_olt,created_at::date
-                '''.format(dateFrom, dateTo)
-        data_ = pd.read_sql(query, con)
-        print(data_)
-        res = data_.to_dict(orient='records')
-        return res
-    else:
-        return "Veullez saisir une date"
-
+@app.route('/derniereheurecoupure', methods=['GET'])
+def derniere_heure_coupure_api():
+    return derniere_heure_coupure()
 
 # Test de la fonction d'activation
 @app.route('/users/testActivation/<string:userId>/', methods=['GET'])
