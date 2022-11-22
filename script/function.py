@@ -46,38 +46,7 @@ def getRoleToken(token):
         return {'status': 'Error', 'error': ValueError}
 
 
-# La fonction getIpAdress()
-
-
-def getIpAdress():
-    h_name = socket.gethostname()
-    IP_addres = socket.gethostbyname(h_name)
-    return IP_addres
-
-
-# La fonction log_app()
-
-
-def log_app(message):
-    file_formatter = logging.Formatter(
-        "{'time':'%(asctime)s', 'service.name': 'Diag_Distant', 'level': '%(levelname)s', 'message': " + str(
-            message) + "}"
-    )
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-
-    console.setFormatter(file_formatter)
-    # add the handler to the root logger
-    logging.getLogger('').addHandler(console)
-    # logging.basicConfig(format='%(asctime)s %(message)s ' + message, datefmt='%d/%m/%Y %H:%M:%S')
-    # logging.StreamHandler(sys.stdout)
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-
-
 # La fonction getAllDoublon
-
-
 def getAllDoublon():
     con = connect()
     query = ''' 
@@ -92,10 +61,7 @@ def getAllDoublon():
     res = data_.to_dict(orient='records')
     return res
 
-
 # La fonction affichage des dernieres heure de coupure
-
-
 def getDerniereHeureDeCoupure():
     con = connect()
     query = ''' Select numero,nom_olt, ip, vendeur, anomalie, criticite, Max(created_at) as created_at  

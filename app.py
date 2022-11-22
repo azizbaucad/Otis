@@ -1,18 +1,15 @@
 from flask import Flask, request, jsonify
 from http import HTTPStatus
-from script.function import getDerniereHeureDeCoupure, getIpAdress, log_app, decodeToken, getRoleToken
+from script.function import getDerniereHeureDeCoupure, decodeToken, getRoleToken
 import os
-from script.conf import add_headers, truncate_query, connect
+from script.conf import add_headers, truncate_query, connect, get_ip_address, log_app
 from script.main_function import monitoring, get_doublon, get_coupure, get_historique_coupure, taux_utilisation_debit, \
     metric_date_between, resultat_diagnostic, recherche_elargie, derniere_heure_coupure
-from script.account import configuration, adminToken
+from script.account import configuration, adminToken, get_token
 import requests
 import flask
 from flask_cors import CORS
-import pandas as pd
-from datetime import datetime
-import datetime
-import time
+
 import warnings
 
 # warnings.filterwarnings("ignore")  # Ignorer les warnings
@@ -31,6 +28,9 @@ URI_ROLES = configuration()['URI_ROLES']
 REALM = configuration()['REALM']
 URI_BASE = configuration()['URI_BASE']
 
+@app.route('/')
+def hello_world():  # put application's code here
+    return 'WELCOME TO Saytu Network Backend'
 
 # Good doublons
 @app.route('/listedoublons', methods=['GET'])
@@ -85,6 +85,18 @@ def metric_date_between_api():
 def derniere_heure_coupure_api():
     return derniere_heure_coupure()
 
+def get_keycloak_headers():
+    donnee = testGetTokenUserAdmin()
+    token_admin = donnee['tokens']['access_token']
+    return {
+        'Authorization': 'Bearer ' + token_admin,
+        'Content-Type': 'application/json'
+    }
+
+@app.route('/auth', methods=['POST'])
+def get_token_api():
+    return get_token()
+
 # Test de la fonction d'activation
 @app.route('/users/testActivation/<string:userId>/', methods=['GET'])
 def testActivation(userId):
@@ -101,80 +113,6 @@ def testActivation(userId):
         # return jsonify({"test": headerss})#print(headers)
     except:
         print("------------------------------Mauvais  Headers------------------")
-
-
-@app.route('/')
-def hello_world():  # put application's code here
-    return 'WELCOME TO Saytu Network Backend'
-
-
-def get_keycloak_headers():
-    donnee = testGetTokenUserAdmin()
-    token_admin = donnee['tokens']['access_token']
-    return {
-        'Authorization': 'Bearer ' + token_admin,
-        'Content-Type': 'application/json'
-    }
-
-
-@app.route('/auth', methods=['POST'])
-def GetToken():
-    # TODO : Control username et password
-    body = request.get_json(force=True)
-
-    data = {
-
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
-        "grant_type": 'password',
-        'username': body['username'],
-        'password': body['password']
-    }
-
-    url = URI
-    response = requests.post(url, data=data)
-
-    if response.status_code > 200:
-        messageLogging = body['username'] + " a tenté de se connecter sans success "
-        message_log = {
-            "url.path": request.base_url,
-            "http.request.method": request.method,
-            "client.ip": getIpAdress(),
-            "event.message": messageLogging,
-            "process.id": os.getpid(),
-        }
-        log_app(message_log)
-        print('-----------------------LOG--------------------')
-        print(message_log)
-
-        return {"message": "Username ou Password Incorrect", 'code': HTTPStatus.BAD_REQUEST}
-
-    tokens_data = response.json()
-
-    ret = {
-        'tokens': {
-            "access_token": tokens_data['access_token'],
-            "refresh_token": tokens_data['refresh_token'],
-        }
-    }
-
-    messageLogging = body['username'] + " s'est connecté avec success"
-    message_log = {
-        "url.path": request.base_url,
-        "http.request.method": request.method,
-        "client.ip": getIpAdress(),
-        "event.message": messageLogging,
-        "process.id": os.getpid(),
-    }
-    log_app(message_log)
-
-    print('-----------------------LOG--------------------')
-    print(message_log)
-
-    return jsonify(ret), 200
-
-    # return jsonify({"message": "ok", "codes": 200}, ret), 200
-
 
 # Test Get User By ID
 @app.route('/testGetUserId', methods=['GET'])
@@ -407,7 +345,7 @@ def GetAllUsers():
                 message_log = {
                     "url.path": request.base_url,
                     "http.request.method": request.method,
-                    "client.ip": getIpAdress(),
+                    "client.ip": get_ip_address(),
                     "event.message": messageLogging,
                     "process.id": os.getpid(),
 
@@ -418,7 +356,7 @@ def GetAllUsers():
             message_log = {
                 "url.path": request.base_url,
                 "http.request.method": request.method,
-                "client.ip": getIpAdress(),
+                "client.ip": get_ip_address(),
                 "event.message": messageLogging,
                 "process.id": os.getpid(),
             }
@@ -476,7 +414,7 @@ def GetOnlyUser(userId):
                 message_log = {
                     "url.path": request.base_url,
                     "http.request.method": request.method,
-                    "client.ip": getIpAdress(),
+                    "client.ip": get_ip_address(),
                     "event.message": messageLogging,
                     "process.id": os.getpid(),
                 }
@@ -487,7 +425,7 @@ def GetOnlyUser(userId):
             message_log = {
                 "url.path": request.base_url,
                 "http.request.method": request.method,
-                "client.ip": getIpAdress(),
+                "client.ip": get_ip_address(),
                 "event.message": messageLogging,
                 "process.id": os.getpid(),
             }
@@ -562,7 +500,7 @@ def CreateUser():
                 message_log = {
                     "url.path": request.base_url,
                     "http.request.method": request.method,
-                    "client.ip": getIpAdress(),
+                    "client.ip": get_ip_address(),
                     "event.message": messageLogging,
                     "process.id": os.getpid(),
                 }
@@ -642,7 +580,7 @@ def UpdateUser(userId):
                 message_log = {
                     "url.path": request.base_url,
                     "http.request.method": request.method,
-                    "client.ip": getIpAdress(),
+                    "client.ip": get_ip_address(),
                     "event.message": messageLogging,
                     "process.id": os.getpid(),
                 }
@@ -653,7 +591,7 @@ def UpdateUser(userId):
             message_log = {
                 "url.path": request.base_url,
                 "http.request.method": request.method,
-                "client.ip": getIpAdress(),
+                "client.ip": get_ip_address(),
                 "event.message": messageLogging,
                 "process.id": os.getpid(),
             }
@@ -720,7 +658,7 @@ def EnableDisableUser(userId):
                 message_log = {
                     "url.path": request.base_url,
                     "http.request.method": request.method,
-                    "client.ip": getIpAdress(),
+                    "client.ip": get_ip_address(),
                     "event.message": messageLogging,
                     "process.id": os.getpid(),
                 }
@@ -777,7 +715,7 @@ def DeleteUser(userId):
                 message_log = {
                     "url.path": request.base_url,
                     "http.request.method": request.method,
-                    "client.ip": getIpAdress(),
+                    "client.ip": get_ip_address(),
                     "event.message": messageLogging,
                     "process.id": os.getpid(),
                 }
@@ -791,7 +729,7 @@ def DeleteUser(userId):
             message_log = {
                 "url.path": request.base_url,
                 "http.request.method": request.method,
-                "client.ip": getIpAdress(),
+                "client.ip": get_ip_address(),
                 "event.message": messageLogging,
                 "process.id": os.getpid(),
             }
@@ -852,7 +790,7 @@ def AllProfils():
                 message_log = {
                     "url.path": request.base_url,
                     "http.request.method": request.method,
-                    "client.ip": getIpAdress(),
+                    "client.ip": get_ip_address(),
                     "event.message": messageLogging,
                     "process.id": os.getpid(),
                 }
@@ -863,7 +801,7 @@ def AllProfils():
             message_log = {
                 "url.path": request.base_url,
                 "http.request.method": request.method,
-                "client.ip": getIpAdress(),
+                "client.ip": get_ip_address(),
                 "event.message": messageLogging,
                 "process.id": os.getpid(),
             }
@@ -923,7 +861,7 @@ def CreateProfils():
                 message_log = {
                     "url.path": request.base_url,
                     "http.request.method": request.method,
-                    "client.ip": getIpAdress(),
+                    "client.ip": get_ip_address(),
                     "event.message": messageLogging,
                     "process.id": os.getpid(),
                 }
@@ -984,7 +922,7 @@ def UserRole(userId):
                 message_log = {
                     "url.path": request.base_url,
                     "http.request.method": request.method,
-                    "client.ip": getIpAdress(),
+                    "client.ip": get_ip_address(),
                     "event.message": messageLogging,
                     "process.id": os.getpid(),
                 }
@@ -995,7 +933,7 @@ def UserRole(userId):
             message_log = {
                 "url.path": request.base_url,
                 "http.request.method": request.method,
-                "client.ip": getIpAdress(),
+                "client.ip": get_ip_address(),
                 "event.message": messageLogging,
                 "process.id": os.getpid(),
             }
@@ -1036,7 +974,7 @@ def logout():
             message_log = {
                 "url.path": request.base_url,
                 "http.request.method": request.method,
-                "client.ip": getIpAdress(),
+                "client.ip": get_ip_address(),
                 "event.message": messageLogging,
                 "process.id": os.getpid(),
             }
@@ -1111,26 +1049,6 @@ def get_info_user(userId):
             return data
     except ValueError:
         return jsonify({'status': 'Error', 'error': ValueError})
-
-
-def insert_constitution():
-    con = connect()
-    cursor = con.cursor()
-    df = pd.read_csv("script/constitution_output.csv", sep=",", error_bad_lines=False, encoding_errors='ignore',
-                     engine='python')
-    for index, row in df.iterrows():
-        cursor.execute(
-            ''' 
-                INSERT INTO parc_constitution_ftth (nd, nom, prenom, etat_client, contact_mobile_client, acces_reseau, libelle_rsp_fo )
-                                                         VALUES (%s, %s, %s, %s, %s, %s, %s)  ''',
-            (row.ND, row.NOM, row.PRENOM1, row.ETAT_DU_CLIENT, row.CONTACT_MOBILE_CLIENT, row.ACCES_RESEAU,
-             row.LIBELLE_RSP_FO),
-        )
-        con.commit()
-        print(
-            '...Insertion en cours............................................................................................................')
-    con.commit()
-    cursor.close()
 
 
 if __name__ == '__main__':

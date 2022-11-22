@@ -4,8 +4,8 @@ import yaml
 from flask import Config, jsonify, request
 import psycopg2
 import pandas as pd
-
-
+import socket
+import logging
 
 class YactConfig(Config):
     def from_yaml(self, config_file, directory=None):
@@ -37,6 +37,31 @@ def error(message):
 # fonction de connection à la BDD
 def connect():
     return psycopg2.connect(database=NAME_DB, user=USER_DB, password=PASSWORD_DB, host=HOST_DB, port=PORT_DB)
+
+# Fonction de recupération de l'adresse IP
+def get_ip_address():
+    host_name = socket.gethostname()
+    ip_address = socket.gethostbyname(host_name)
+    return ip_address
+
+# Fonction Log app
+def log_app(message):
+    file_formatter = logging.Formatter(
+        "{'time':'%(asctime)s', 'service.name': 'Diag_Distant', 'level': '%(levelname)s', 'message': " + str(
+            message) + "}"
+    )
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+
+    console.setFormatter(file_formatter)
+    # add the handler to the root logger
+    logging.getLogger('').addHandler(console)
+    # logging.basicConfig(format='%(asctime)s %(message)s ' + message, datefmt='%d/%m/%Y %H:%M:%S')
+    # logging.StreamHandler(sys.stdout)
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
+
 
 # fonction pour les requetes de type select sans arguments
 def select_query(query):
@@ -96,27 +121,6 @@ def select_query_date_between(query, arg1=None, arg2=None, arg3=None):
         return data
     else:
         return {"Error": "Verifier les arguments entrées !!!"}
-
-
-
-# test des parmas
-# if __name__ == '__main__':
-#     print("-----------------test mes codes-----------------------")
-#     def testclearg(query, *args):
-#         print(".....The query is....................\n")
-#         print(query)
-#         print("\n ........ The arguments is .........")
-#         for i in args:
-#             print(i)
-#
-#
-#     a1 = "Bob"
-#     a2 = [1, 2, 3]
-#     a3 = {'a': 222, 'b': 333, 'c': 444}
-#     testclearg("Select * from Something", a1, a2, a3)
-
-
-    #testclearg(a1, a2, a3, param1=True, param2=12, param3=None)
 
 
 NAME_DB = configuration()["NAME_DB"]
