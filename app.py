@@ -1,8 +1,9 @@
 import csv
 from flask import Flask, request, jsonify, Config
-# from psycopg2 import cursor
-from script.function import *
-from script.function_post import *
+from http import HTTPStatus
+from script.function import getDerniereHeureDeCoupure, getIpAdress, log_app, decodeToken, getRoleToken
+#from script.function import *
+#from script.function_post import *
 from script.conf import *
 from script.main_function import *
 from script.account import *
@@ -38,12 +39,6 @@ URI_USER = configuration()['URI_USER']
 URI_ROLES = configuration()['URI_ROLES']
 REALM = configuration()['REALM']
 URI_BASE = configuration()['URI_BASE']
-
-
-# requete historique/date
-@app.route('/historique', methods=['POST'])
-def historique():
-    return get_historique_by_date()
 
 
 # Good doublons
@@ -143,193 +138,6 @@ def metric_date_between_api():
     return metric_date_between()
 
 
-# return historique
-@app.route('/get_historique', methods=['GET', 'POST'])
-def get_historique_():
-    con = connect()
-    if request.method == 'GET':
-        res = get_historique()
-    if request.method == 'POST':
-        data = request.get_json()
-        date = data['date']
-        if date is not None and date != "":
-            # Mettre ici la requete
-            query = "Select numero, date_, created_at from historique_diagnostic where anomalie like '%Coupure%' and (NOW()::date  -  date_) >= 30 ;"
-            data_ = pd.read_sql(query, con)
-            print(data_)
-
-            res = get_historique()
-        else:
-            return "ERROR 404", 404
-    return
-
-
-@app.route('/get_test_historique', methods=['GET', 'POST'])
-def get_test_historique():
-    con = connect()
-    if request.method == 'GET':
-        res = get_historique()
-    if request.method == 'POST':
-        data = request.get_json()
-        dateFrom = data['dateFrom']
-        dateTo = data['dateTo']
-        Duree = data['Duree']
-        if dateFrom is not None and dateFrom != "" and dateTo is not None and dateTo != "":
-            print(dateFrom)
-            print(dateTo)
-        query = "Select numero, count(numero) FROM maintenance_predictive_ftth WHERE date BETWEEN '{}'  AND  '{}' GROUP BY numero HAVING COUNT(numero) = {}".format(
-            dateFrom, dateTo, Duree)
-        data_ = pd.read_sql(query, con)
-        print(data_)
-        res = data_.to_dict(orient='records')
-        return res
-    return res
-
-
-# Fontion de test des args
-@app.route('/with_parameters')
-def with_parameters():
-    name = request.args.get('name')
-    age = request.args.get('age')
-    return jsonify(message="My name is" + str(name) + "and I am" + str(age))
-
-
-@app.route('/with_url_variables/<string:name>/<int:age>')
-def with_url_variables(name: str, age: int):
-    return jsonify(message="My name is" + name + " and I am" + str(age) + "Years old")
-
-
-@app.route('/index/<subject>')
-def subject(subject):
-    return "The value is: " + subject
-
-
-@app.route('/posteee/<int:post_id>/<string:test>')
-def show_post(post_id, test):
-    # show the post with the given id, the id is an integer
-    return f'Post {post_id}, Test' + str(test)
-
-
-@app.route('/test_query')
-def test_query():
-    # data = []
-    con = None
-    try:
-        con = connect()
-        cur = con.cursor()
-        cur.execute("SElect * from historique_diagnostic limit 4 ;")
-        data = cur.fetchall()
-        cur.close()
-        con.commit()
-        # return jsonpickle.encode(data)
-    except(Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if con is not None:
-            con.close()
-    return data
-
-
-def datebetween(date1, date2):
-    date1 = datetime.strptime(date1, "%Y-%m-%d")
-    date2 = datetime.strptime(date2, "%Y-%m-%d")
-    duree = date2 - date1
-    return duree
-
-
-@app.route('/testdatee', methods=['POST', 'GET'])
-def testdatee():
-    date1 = request.args.get('date1')
-    date2 = request.args.get('date2')
-
-    print(type(date1))
-    print(type(date2))
-    print("Date 1 is" + date1 + "Date 2 is" + date2)
-    # date1 = datetime.strptime()
-    date1 = datetime.strptime(date1, '%Y-%m-%d')
-    date2 = datetime.strptime(date2, '%Y-%m-%d')
-    date1 = date1.date()
-    date2 = date2.date()
-
-    print(type(date1))
-    print(type(date2))
-    delta = date2 - date1
-    print("La duree est de :")
-    print(delta.days)
-    # print("Date 1 is" + date1 + "Date 2 is" + date2)
-    return "print(type(date1)) i "
-
-
-@app.route('/datee', methods=['POST', 'GET'])
-def get_Date_Diff():
-    con = connect()
-
-    dateFrom = request.args.get('dateFrom')
-    dateTo = request.args.get('dateTo')
-
-    print(type(dateFrom))
-    print(type(dateTo))
-
-    print("Date iss" + dateFrom + "Date To is" + dateTo)
-    dateFrom = datetime.strptime(dateFrom, '%Y-%m-%d')
-    dateTo = datetime.strptime(dateTo, '%Y-%m-%d')
-
-    dateFrom = dateFrom.date()
-    dateTo = dateTo.date()
-
-    print(type(dateFrom))
-    print(type(dateTo))
-
-    Duree = dateTo - dateFrom
-
-    print("La duree est de")
-    print(Duree.days)
-    Duree = Duree.days
-    # Duree = request.args.get('Duree')
-    # print("DateFrom is " + dateFrom + "DateTo is " + dateTo + "and Duree is " + Duree)
-    print(type(dateFrom))
-    print(type(dateTo))
-    if dateFrom is not None and dateFrom != "" and dateTo is not None and dateTo != "":
-        print(dateFrom)
-        print(dateTo)
-    query = "Select numero, ip, anomalie, nom_olt,  count(numero) as Dureee FROM maintenance_predictive_ftth WHERE date BETWEEN '{}'  AND  '{}' GROUP BY numero, ip, anomalie, nom_olt HAVING COUNT(numero) = {}".format(
-        dateFrom, dateTo, Duree)
-    data_ = pd.read_sql(query, con)
-    print(data_)
-    res = data_.to_dict(orient='records')
-    return res
-
-    # return 'From Date is'+request.args.get('from_date') + ' To Date is ' + request.args.get('to_date')
-
-
-# La fonction qui retourne les numeros en doublon
-@app.route('/doublonstest', methods=['GET'])
-def getDoublon():
-    if request.method == 'GET':
-
-        con = connect()
-
-        numero = request.args.get('numero')
-        # print(type(numero))
-        # print("le numero saisi est" + numero)
-
-        if numero is None or numero == "":
-            return getAllDoublon()
-        else:
-
-            query = ''' 
-                            Select db.service_id, db.created_at::date, db.nom_olt, db.ip_olt, db.vendeur, mt.oltrxpwr, mt.ontrxpwr
-                                From doublons_ftth as db, metric_seytu_network as mt
-                                where db.service_id = mt.numero 
-                                and db.ip_olt = mt.olt_ip
-                                and db.service_id = '{}'  order by db.created_at::date desc
-                        '''.format(numero)
-            data_ = pd.read_sql(query, con)
-            print(data_)
-            res = data_.to_dict(orient='records')
-            return res
-
-
 # API pour l'affichage de la dernière date de coupure
 @app.route('/derniereheureCoupure', methods=['GET'])
 def get_Heure_Coupure():
@@ -377,12 +185,6 @@ def tauxOccupation():
         return "Veullez saisir une date"
 
 
-# API de l'historissation du taux d'occupation
-@app.route('/testgitt')
-def HistoriqueTauxOccupation():
-    return testQuery()
-
-
 # Test de la fonction d'activation
 @app.route('/users/testActivation/<string:userId>/', methods=['GET'])
 def testActivation(userId):
@@ -399,13 +201,6 @@ def testActivation(userId):
         # return jsonify({"test": headerss})#print(headers)
     except:
         print("------------------------------Mauvais  Headers------------------")
-
-
-# la fonction d'activation de l'utilisateur
-
-
-# creation de la fonction get_keycloak_headers
-
 
 @app.route('/')
 def hello_world():  # put application's code here
@@ -1415,23 +1210,6 @@ def get_info_user(userId):
             return data
     except ValueError:
         return jsonify({'status': 'Error', 'error': ValueError})
-
-
-@app.route('/testgit')
-def test_git():
-    return testQuery()
-
-
-@app.route('/historiquedebit')
-def test_history():
-    return testHistory()
-
-
-# create_table_inventaire_history() # appel de la fonction
-# HistoryInventary()  # appel de la
-# configurationClientsHuawei("338234209")
-# create_table_parc_constitution_ftth()
-print("---------------------- Test --------------")
 
 
 def insert_constitution():
