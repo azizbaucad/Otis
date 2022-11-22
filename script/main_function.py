@@ -1,10 +1,12 @@
 import psycopg2
 from psycopg2 import Error
-from script.conf import *
+from script.conf import connect, truncate_query, select_query, select_query_date_between, select_query_argument
 import pandas as pd
 from datetime import datetime
 from script.function import get_vendeur
-
+import datetime
+import time
+from flask import request
 from script.confClientsNokia import getProvisioning
 from script.confClientsHuawei import configurationClientsHuawei
 
@@ -170,6 +172,57 @@ def metric_date_between():
 
     else:
         return "Veuillez saisir les dates"
+
+# Fonction permettant de faire le diagnostic à temps réesl
+def monitoring():
+    numero = request.args.get('numero')
+
+    date_start = request.args.get('dateDebut')
+    date_start = datetime.datetime.fromisoformat(date_start)
+
+    interval_to_sleep_int = int(request.args.get('interval'))
+    # interval_to_sleep_int = interval_to_sleep_int * 60
+    interval_to_sleep = datetime.timedelta(minutes=interval_to_sleep_int)
+
+    date_end = request.args.get('dateFin')
+    date_end = datetime.datetime.fromisoformat(date_end)
+
+    date_start_iso = date_start.isoformat(' ', 'seconds')
+    date_end_iso = date_end.isoformat(' ', 'seconds')
+
+    if numero is not None:
+        truncate_query(''' TRUNCATE TABLE real_time_diagnostic''')
+
+        while datetime.datetime.now().isoformat(' ', 'seconds'):
+            # time.sleep(1)
+            # print('Be Patient Otis...')
+            if datetime.datetime.now().isoformat(' ', 'seconds') == date_start_iso:
+                print('Otis is now start...')
+                while datetime.datetime.now().isoformat(' ', 'seconds'):
+
+                    to_real_time_diagnostic(numero)
+                    time.sleep(interval_to_sleep_int * 60)
+                    date_start = date_start + interval_to_sleep
+
+                    # print(f'Date start now: {date_start}')
+
+                    if date_start > date_end or date_start == date_end:
+                        # to_real_time_diagnostic(numero)
+                        # print('Otis is Dead first one...')
+                        # print(f'Date end iso : {date_end_iso}')
+                        break
+            # if 10000 <= number <= 30000:
+            if datetime.datetime.now().isoformat(' ', 'seconds') == date_end_iso or datetime.datetime.now().isoformat(
+                    ' ', 'seconds') > date_end_iso:
+                # print('Otis is now Dead...')
+                break
+
+        # recuperer les données
+        # data = select_query_argument(''' SELECT * FROM real_time_diagnostic ORDER BY DATE ASC ''', numero)
+        return "Fin du diagnostic"
+
+    else:
+        return "Vous devez saisir un numéro"
 
 
 # Fonction permettant d'afficher le resultats du diagnostic
