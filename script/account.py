@@ -15,8 +15,8 @@ REALM = configuration()['REALM']
 URI_BASE = configuration()['URI_BASE']
 
 
-# fonction adminToken
-def adminToken():
+# fonction admin_token
+def admin_token():
     data = {
         'grant_type': 'client_credentials',
         'client_id': CLIENT_ID,
@@ -93,3 +93,27 @@ def get_token():
     print(message_log)
 
     return jsonify(ret), 200
+
+# Fonction permettant d'obtenir le token de l'admin
+def get_token_user_admin():
+    url = URI
+    params = {
+        'client_id': CLIENT_ID,
+        'grant_type': GRANT_TYPE,
+        'client_secret': CLIENT_SECRET,
+        # 'username': 'dbm_user',
+        # 'password': 'Aziz_2030'
+    }
+    response = requests.post(url, params, verify=False)
+    if response.status_code > 200:
+        return {'message': 'Username ou Password Incorrect', 'status': 'error'}
+    tokens_data = response.json()
+    ret = {
+        'tokens': {
+            'access_token': tokens_data['access_token'],
+            'token_type': tokens_data['token_type'],
+        },
+        'status': 'success',
+    }
+    print(response)
+    return ret

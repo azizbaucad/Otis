@@ -5,7 +5,7 @@ import os
 from script.conf import add_headers, truncate_query, connect, get_ip_address, log_app
 from script.main_function import monitoring, get_doublon, get_coupure, get_historique_coupure, taux_utilisation_debit, \
     metric_date_between, resultat_diagnostic, recherche_elargie, derniere_heure_coupure
-from script.account import configuration, adminToken, get_token
+from script.account import configuration, admin_token, get_token, get_token_user_admin
 import requests
 import flask
 from flask_cors import CORS
@@ -86,7 +86,7 @@ def derniere_heure_coupure_api():
     return derniere_heure_coupure()
 
 def get_keycloak_headers():
-    donnee = testGetTokenUserAdmin()
+    donnee = get_token_user_admin()
     token_admin = donnee['tokens']['access_token']
     return {
         'Authorization': 'Bearer ' + token_admin,
@@ -122,7 +122,7 @@ def testGetUserId():
         url = URI_USER + '/' + userId
         print("----------------le url recuperer est-------------------")
         print(url)
-        donnee = adminToken()
+        donnee = admin_token()
         token_admin = donnee['tokens']['access_token']
         print("---------------le token admin est-----------------")
         print(token_admin)
@@ -167,33 +167,6 @@ def activation_users():
         print("-------------ERRORR--------")
         return {"Good": "response"}
 
-
-# Fonction permettant de tester l'obtention du to2ken Simple User
-@app.route('/testGetTokenUserAdmin', methods=['GET'])
-def testGetTokenUserAdmin():
-    url = "https://keycloak-pprod.orange-sonatel.com/auth/realms/Saytu_realm/protocol/openid-connect/token"
-    params = {
-        'client_id': 'saytu_keycloak_python',
-        'grant_type': 'client_credentials',
-        'client_secret': '5b00ff07-a482-417d-8aff-0e5d83045078',
-        # 'username': 'dbm_user',
-        # 'password': 'Aziz_2030'
-    }
-    response = requests.post(url, params, verify=False)
-    if response.status_code > 200:
-        return {'message': 'Username ou Password Incorrect', 'status': 'error'}
-    tokens_data = response.json()
-    ret = {
-        'tokens': {
-            'access_token': tokens_data['access_token'],
-            'token_type': tokens_data['token_type'],
-        },
-        'status': 'success',
-    }
-    print(response)
-    return ret  # jsonify({'message':'ok', "token": response.json()})
-
-
 # Fonction permettant de tester l'obtention du token Admin
 @app.route('/testGetTokenUserSimple', methods=['GET'])
 def testGetTokenUserSimple():
@@ -223,10 +196,10 @@ def GetUserByID(userId):
         # urls = URI_USER + '?username=' + userName
         print('-----------------------le url recuperer est----------------')
         print(url)
-        donnee = testGetTokenUserAdmin()
+        donnee = get_token_user_admin()
         print('-----------------------le url avec userName recuperer est----------------')
         # print(urls)
-        donnee = testGetTokenUserAdmin()
+        donnee = get_token_user_admin()
         token_admin = donnee['tokens']['access_token']
         print('---------------le token Admin recuperer est ---------')
         print(token_admin)
@@ -265,7 +238,7 @@ def GetInfoUser(userId):
         URI_USER = 'https://keycloak-pprod.orange-sonatel.com/auth/admin/realms/saytu_realm/users'
         # userId = '64b43eff-fcdf-4394-b207-0f067afd7894'
         url = URI_USER + '/' + userId + '/role-mappings/realm'
-        donnee = testGetTokenUserAdmin()
+        donnee = get_token_user_admin()
         token_admin = donnee['tokens']['access_token']
         response = requests.get(url, headers={'Authorization': 'Bearer {}'.format(token_admin)})
         if response.status_code > 200:
@@ -322,7 +295,7 @@ def GetAllUsers():
                 print(getRoleToken(token))
 
                 url = URI_USER + '?max=1000'
-                donnee = testGetTokenUserAdmin()
+                donnee = get_token_user_admin()
                 token_admin = donnee['tokens']['access_token']
                 response = requests.get(url, headers={'Authorization': 'Bearer {}'.format(token_admin)})
                 if response.status_code > 200:
@@ -400,7 +373,7 @@ def GetOnlyUser(userId):
             if getRoleToken(token) == 'admin' or getRoleToken(token) == 'sf':
 
                 url = URI_USER + '/' + userId
-                donnee = testGetTokenUserAdmin()
+                donnee = get_token_user_admin()
                 token_admin = donnee['tokens']['access_token']
                 response = requests.get(url, headers={'Authorization': 'Bearer {}'.format(token_admin)})
                 if response.status_code > 200:
@@ -485,7 +458,7 @@ def CreateUser():
 
                 # return data
 
-                donnee = testGetTokenUserAdmin()
+                donnee = get_token_user_admin()
                 headers = get_keycloak_headers()
                 response = requests.post(url, headers=headers, json=data)
                 if response.status_code == 409:
@@ -566,7 +539,7 @@ def UpdateUser(userId):
                     ]
                 }
 
-                donnee = testGetTokenUserAdmin()
+                donnee = get_token_user_admin()
                 token_admin = donnee['tokens']["access_token"]
                 headers = get_keycloak_headers()
                 response = requests.put(url, headers=headers, json=data)
@@ -639,7 +612,7 @@ def EnableDisableUser(userId):
                     "enabled": not body['enabled'],
                 }
 
-                donnee = testGetTokenUserAdmin()
+                donnee = get_token_user_admin()
                 token_admin = donnee['tokens']["access_token"]
                 headers = get_keycloak_headers()
                 response = requests.put(url, headers=headers, json=data)
@@ -703,7 +676,7 @@ def DeleteUser(userId):
                     token) == 'sf':  # sf n'est pas autorisé seull admin doit pouvoir faire cette demande
 
                 url = URI_USER + '/' + userId
-                donnee = testGetTokenUserAdmin()
+                donnee = get_token_user_admin()
                 token_admin = donnee['tokens']["access_token"]
                 headers = get_keycloak_headers()
                 messageLogging = name + " a supprimé l'utilisateur " + GetUserByID(userId)['data']['username']
@@ -767,7 +740,7 @@ def AllProfils():
             if getRoleToken(token) == 'admin' or getRoleToken(token) == 'sf':
 
                 url = URI_ROLES
-                donnee = testGetTokenUserAdmin()
+                donnee = get_token_user_admin()
                 token_admin = donnee['tokens']["access_token"]
                 response = requests.get(url,
                                         headers={'Authorization': 'Bearer {}'.format(token_admin)})
@@ -991,7 +964,7 @@ def logout():
 # fonction DeleteProfilUser
 def DeleteProfilUser(userId):
     url = URI_USER + '/' + userId + '/role-mappings/realm'
-    donnee = testGetTokenUserAdmin()
+    donnee = get_token_user_admin()
     token_admin = donnee['tokens']["access_token"]
     response = requests.get(url, headers={'Authorization': 'Bearer {}'.format(token_admin)})
     for role in response.json():
@@ -1012,7 +985,7 @@ def DeleteProfilUser(userId):
 def get_user_by_id(userId):
     try:
         url = URI_USER + '/' + userId
-        donnee = adminToken()
+        donnee = admin_token()
         token_admin = donnee['tokens']["access_token"]
         response = requests.get(url,
                                 headers={'Authorization': 'Bearer {}'.format(token_admin)})
@@ -1036,7 +1009,7 @@ def get_user_by_id(userId):
 def get_info_user(userId):
     try:
         url = URI_USER + '/' + userId + '/role-mappings/realm'
-        donnee = adminToken()
+        donnee = admin_token()
         token_admin = donnee['tokens']["access_token"]
         response = requests.get(url, headers={'Authorization': 'Bearer {}'.format(token_admin)})
         if response.status_code > 200:
