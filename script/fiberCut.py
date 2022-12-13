@@ -4,6 +4,7 @@ from script.function import data_inventaire, data_invent
 import datetime
 
 
+
 def fiberCut(serviceId):
     """
     fonction permettant de diagnostiquer s'il y a coupure
@@ -96,7 +97,7 @@ def fiberCut(serviceId):
                                        "Faire une mesure de réflectometrie pour localisation du point de coupure."]
                 }
             else:
-                return {'status': 'ok', 'description': 'coupure fibre Non'}
+                return {'status': 'ok', 'description': 'coupure fibre Non', 'Numero': serviceId}
 
         # Pour Huawei
 
@@ -159,7 +160,7 @@ def fiberCut(serviceId):
                                        "Faire une mesure de réflectometrie pour localisation du point de coupure."]
                 }
             else:
-                return {'status': 'ok', 'description': 'coupure fibre Non'}
+                return {'status': 'ok', 'description': 'coupure fibre Non', 'Numero': serviceId}
 
     except:
         pass
@@ -220,3 +221,8 @@ def scriptMaintenanceFiberCut(taille, pas):
 
     end_time = datetime.now()
     print('Duration: {}'.format(end_time - start_time))
+
+# Appel de la fonction fiberCut
+if __name__ == '__main__':
+    print(fiberCut('338609501'))
+

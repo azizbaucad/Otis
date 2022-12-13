@@ -1,0 +1,10 @@
+
+_python:S2208"GImport only needed names or import the module and then use its members.(êâğ
+@python:S1481"(Remove the unused local variable "date".(§„”—
+Qpython:S1135	"4Complete the task associated to this "TODO" comment.(¸ö†Øùÿÿÿÿ
+Epython:S1481"(Remove the unused local variable "data".(Ì­²Ôıÿÿÿÿ
+Dpython:S1481"'Remove the unused local variable "cur".(¥¶øûÿÿÿÿ
+Dpython:S1481"'Remove the unused local variable "dat".(î¢’õúÿÿÿÿ
+;python:S125"Remove this commented out code.(ÌÖ„éúÿÿÿÿ
+;python:S125"Remove this commented out code.(ÇëÈùÿÿÿÿ
+6python:S125 "Remove this commented out code.(Úı‘—

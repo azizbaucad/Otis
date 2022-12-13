@@ -135,61 +135,61 @@ def getProvisioning(serviceId):
     dataFibre = fiberCut(serviceId)
     dataOnt = ontPowerUnderLimit(serviceId)
     dataOlt = oltPowerUnderLimit(serviceId)
-    dataPower = powerSupplyDown(serviceId)
-
-    if (dataFibre['status'] == 'ok' and dataPower['status'] == 'ok' and dataOnt['status'] == 'ok' and dataOlt[
-        'status'] == 'ok'):
-        isAnomalie = False
-
-    anomalie = {
-        'fiberCut': dataFibre,
-        'powerSupplyDown': dataPower,
-        'ontUnderLimit': dataOnt,
-        'oltPowerUnderLimit': dataOlt
-    }
-    anoFibre = ''
-    anoONT = ''
-    anoOLT = ''
-    anoPower = ''
-    if dataFibre['status'] == 'ko':
-        anoFibre = dataFibre['anomalie'] + ", "
-
-    if dataOnt['status'] == 'ko':
-        anoONT = dataOnt['anomalie'] + ", "
-
-    if dataOlt['status'] == 'ko':
-        anoOLT = dataOlt['anomalie'] + ", "
-
-    if dataPower['status'] == 'ko':
-        anoPower = dataPower['anomalie']
-
-    anomalies = "".join([anoFibre, anoONT, anoOLT, anoPower])
+    # dataPower = powerSupplyDown(serviceId)
+    #
+    # if (dataFibre['status'] == 'ok' and dataPower['status'] == 'ok' and dataOnt['status'] == 'ok' and dataOlt[
+    #     'status'] == 'ok'):
+    #     isAnomalie = False
+    #
+    # anomalie = {
+    #     'fiberCut': dataFibre,
+    #     'powerSupplyDown': dataPower,
+    #     'ontUnderLimit': dataOnt,
+    #     'oltPowerUnderLimit': dataOlt
+    # }
+    # anoFibre = ''
+    # anoONT = ''
+    # anoOLT = ''
+    # anoPower = ''
+    # if dataFibre['status'] == 'ko':
+    #     anoFibre = dataFibre['anomalie'] + ", "
+    #
+    # if dataOnt['status'] == 'ko':
+    #     anoONT = dataOnt['anomalie'] + ", "
+    #
+    # if dataOlt['status'] == 'ko':
+    #     anoOLT = dataOlt['anomalie'] + ", "
+    #
+    # if dataPower['status'] == 'ko':
+    #     anoPower = dataPower['anomalie']
+    #
+    # anomalies = "".join([anoFibre, anoONT, anoOLT, anoPower])
     # TODO : ce chargement est à revoir
     # if not isAnomalie:
     #     historique_diagnostic(serviceId, nomOlt, ip, vendeur, str(pon), str(slot), str(ont_id), "Pas d'anomalies",
     #                           isAnomalie)
     # else:
     #     historique_diagnostic(serviceId, nomOlt, ip, vendeur, str(pon), str(slot), str(ont_id), anomalies, isAnomalie)
-    if vendeur == "Huawei":
-        dataHuawei = configurationClientsHuawei(serviceId)
-
-        return {
-            # "ont_id": ont_id,
-            "nomOLT": nomOlt,
-            "ipOLT": ip,
-            "pon": str(pon),
-            "slot": str(slot),
-            "ont": str(ont_id),
-            "opticValue": getOpticalSignal(serviceId),
-            "serviceId": str(serviceId),
-            'hasAnomalie': isAnomalie,
-            'anomalies': anomalie,
-            "statutModem": dataHuawei.get('statutModem'),
-            "qualitySignal": dataHuawei.get('qualitySignal'),
-            "offre": dataHuawei.get('offre'),
-            "maxUp": dataHuawei.get('MaxUp'),
-            "maxDown": dataHuawei.get('MaxDown'),
-        }
+    # if vendeur == "Huawei":
+    #     dataHuawei = configurationClientsHuawei(serviceId)
+    #
+    #     return {
+    #         # "ont_id": ont_id,
+    #         "nomOLT": nomOlt,
+    #         "ipOLT": ip,
+    #         "pon": str(pon),
+    #         "slot": str(slot),
+    #         "ont": str(ont_id),
+    #         "opticValue": getOpticalSignal(serviceId),
+    #         "serviceId": str(serviceId),
+    #         'hasAnomalie': isAnomalie,
+    #         'anomalies': anomalie,
+    #         "statutModem": dataHuawei.get('statutModem'),
+    #         "qualitySignal": dataHuawei.get('qualitySignal'),
+    #         "offre": dataHuawei.get('offre'),
+    #         "maxUp": dataHuawei.get('MaxUp'),
+    #         "maxDown": dataHuawei.get('MaxDown'),
+    #     }
     id_services_up = []
     id_services_down = []
     listOperStatus = []
@@ -250,9 +250,9 @@ def getProvisioning(serviceId):
                 if int(varBind[1].prettyPrint()) == 32768:
                     qualitySignal = "Signal indisponible"
                 elif rxPower <= -30:
-                    qualitySignal = "Très dégradé"
+                    qualitySignal = "Tres degrade"
                 elif (rxPower > -30 and rxPower <= -27) or rxPower > 10:
-                    qualitySignal = "Dégradé"
+                    qualitySignal = "Degrade"
                 else:
                     qualitySignal = "Normal"
 
@@ -303,37 +303,99 @@ def getProvisioning(serviceId):
     MaxUp = int(re.search(r'\d+', MaxUp).group())
     MaxDown = int(re.search(r'\d+', MaxDown).group())
 
-    print(f'Numero: {serviceId}, Vendeur: {vendeur}, MaxUp: {MaxUp}, MaxDown: {MaxDown}, Statut: {statut}')
+    #print(f'Numero: {serviceId}, Vendeur: {vendeur}, MaxUp: {MaxUp}, MaxDown: {MaxDown}, Statut: {statut}')
+
+    #Intégration de la fonction fiberCut
+    oid_ont = "1.3.6.1.4.1.637.61.1.35.10.4.1.2" + "." + str(ontindex)  # oid de Current OLT alarms   : 1.3.6.1.4.1.637.61.1.35.10.4.1.2
+    currentAlarmList = []
+
+    for (errorIndication,
+         errorStatus,
+         errorIndex,
+         varBinds) in getCmd(SnmpEngine(),
+                             CommunityData('t1HAI2nai'),
+                             UdpTransportTarget(transportAddr=(ip, 161)),
+                             ContextData(),
+                             ObjectType(ObjectIdentity(oid_ont)),
+                             lexicographicMode=False,
+                             lookupMib=False, timeout=2.0, retries=20):
+
+        if errorIndication:
+            raise Exception('SNMP getCmd error {0}'.format(errorIndication))
+        else:
+            for varBind in varBinds:
+                temp_ = bin(int(varBind[1].prettyPrint()))[::-1][:-2]
+                for i in range(len(temp_)):
+                    if temp_[i] == "1":
+                        currentAlarmList.append(str(i + 1))
+
+    # Check if the alarm matches with Loss of signal(1),Inactive(15),Loss of Frame(16) and Signal fail(17)
+
+    for i in currentAlarmList:
+        if i in ["1", "15", "16", "17"]:
+            checkFiberCut = "OK"
+        else:
+            checkFiberCut = "KO"
+
+    # Customer Rx optical power
+
+    oid_ont1 = "1.3.6.1.4.1.637.61.1.35.10.14.1.2" + "." + str(ontindex)  # oid de ontRxpower Nokia: 1.3.6.1.4.1.637.61.1.35.10.14.1.2
+
+    for (errorIndication,
+         errorStatus,
+         errorIndex,
+         varBinds) in getCmd(SnmpEngine(),
+                             CommunityData('t1HAI2nai'),
+                             UdpTransportTarget(transportAddr=(ip, 161)),
+                             ContextData(),
+                             ObjectType(ObjectIdentity(oid_ont1)),
+                             lexicographicMode=False,
+                             lookupMib=False, timeout=2.0, retries=20):
+
+        if errorIndication:
+            raise Exception('SNMP getCmd error {0}'.format(errorIndication))
+        else:
+            for varBind in varBinds:
+                ontpower = varBind[1].prettyPrint()
+                #print('-------------------------ONT POWER--------------------------')
+                #print(ontpower)
+
+    # voir si ontpower=="2147483647" correspond à rx optical power non disponible pour Nokia
+
+    if ontpower == "32768" and checkFiberCut == "OK":  # la valeur 32768 signifie que ont rx optical power est indisponible
+        anomalie_ = "Coupure Fibre"
+        #print(anomalie_)
+        #print(f'Num: {serviceId}')
+        if float(getOpticalSignal(serviceId)) == 0:
+            MaxUp = 0
+            MaxDown = 0
+    else:
+        anomalie_ = "Pas de coupure fibre"
+        #print(anomalie_)
+        #print(f'Num: {serviceId}')
+
+    #Fin de l'intégration de la fonction fiberCut
+
+    #print(f'Num: {serviceId}, anomalie: {anomalie_}, max_up: {MaxUp}, max_down: {MaxDown}, statut: {statut}, qualitySignal: {qualitySignal}')
+
 
     # Inserer les donnes dans la table real_time_diagnostic
     con = connect()
     cursor = con.cursor()
-    cursor.execute(''' INSERT INTO real_time_diagnostic (numero,vendeur, debit_up, debit_down, statut, date) 
-                                    VALUES (%s, %s, %s, %s, %s, %s) ''',
-                   (serviceId, vendeur, MaxUp, MaxDown, statut, dt.now()), )
-
+    # cursor.execute(''' TRUNCATE TABLE real_time_diagnostic ''')
+    cursor.execute(''' INSERT INTO real_time_diagnostic (numero, vendeur, anomalie, debit_up, debit_down, statut, signal)
+                                        VALUES (%s, %s, %s, %s, %s, %s, %s) ''',
+                   (serviceId, vendeur, anomalie_, MaxUp, MaxDown, statut, qualitySignal), )
     con.commit()
-    print("Insertion is running.....")
+    #print("Insertion is running....")
 
-    return {
-        "idServiceUp": id_services_up[0],
-        "idServiceDown": id_services_down[0],
-        "statutModem": listOperStatus[0],
-        "qualitySignal": qualitySignal,
-        "maxUp": MaxUp,
-        "maxDown": MaxDown,
-        "profileNameUp": profileNameUp,
-        "profileNameDown": profileNameDown,
-        "nomOLT": nomOlt,
-        "ipOLT": ip,
-        "pon": str(pon),
-        "slot": str(slot),
-        "ont": str(ont_id),
-        "opticValue": str(getOpticalSignal(serviceId)),
-        "serviceId": str(serviceId),
-        "offre": offre,
-        'hasAnomalie': isAnomalie,
-        'anomalies': anomalie
-    }
+
+    return "Diagnostic en cours..."
+
+if __name__ == '__main__':
+    list_num = ['338689155', '338640863']
+    for num in list_num:
+
+        print(getProvisioning(num))
 
 # print(getProvisioning("338276153"))

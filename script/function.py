@@ -1,3 +1,4 @@
+import json
 import os
 from flask import request
 import jwt
@@ -13,8 +14,6 @@ from script.conf import connect
 
 # import request
 
-with open(os.path.dirname(os.path.abspath(__file__)) + '/config.yaml', "r") as ymlfile:
-    cfg = yaml.load(ymlfile.read(), Loader=yaml.FullLoader)
 
 
 # function de connection à la BDD
@@ -145,27 +144,23 @@ def data_inventaire(numero):
 
 # la fonction get_vendeur permettant d'obtenir le vendeur à partir du serviceId
 def get_vendeur(numero):
-    #cnx = connect()
     data = select_query_argument(''' Select vendeur from inventaireglobal_ftth where service_id = '{}' ''', numero)
-    #print('---------------------------Les donnees recuperes-----------------------------')
-    #print(data)
-    data_ = ''
-    for row in data:
-        # print(row['vendeur'])
-        data_ = row['vendeur']
-        # print(data_)
-    #print('---------------recup final------------')
-    #print(data_)
-    # return data_
-    return data_
 
-    # df = pd.read_sql_query(
-    #     ''' Select vendeur from inventaireglobal_ftth where service_id = '{}' '''.format(
-    #         numero), con=cnx)
-    # df = df.set_axis(
-    #     ['ont_index', 'ont_id', 'serviceId', 'ip_olt', 'slot', 'pon', 'ponIndex', 'vendeur', 'nomOlt'],
-    #     axis=1, inplace=False)
-    # return df
+    # df = pd.DataFrame(data)
+
+    # data_ = ''
+    # for row in data:
+    #     data_ = row['vendeur']
+    data_json = json.loads(data)
+    df = pd.DataFrame(data_json)
+
+    # print(df, type(df))
+
+    for row in df.itertuples():
+        vendeur = row.vendeur
+
+    return vendeur
+
 # la fonction data_invent
 def data_invent():
     cnx = connect()
@@ -195,3 +190,9 @@ def data_infos_huawei_conf(ip, pon, slot):
         axis=1, inplace=False)
     return df
 
+if __name__ == '__main__':
+
+
+
+    vendeur_ = get_vendeur('338224541')
+    print(vendeur_)

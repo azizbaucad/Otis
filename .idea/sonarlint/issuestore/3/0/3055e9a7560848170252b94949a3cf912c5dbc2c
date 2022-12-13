@@ -1,0 +1,11 @@
+
+6python:S125"Remove this commented out code.(õ²Ğ
+npython:S1542"QRename function "decodeToken" to match the regular expression ^[a-z_][a-z0-9_]*$.(¸”Å”ıÿÿÿÿ
+Tpython:S5754"<Specify an exception class to catch or reraise the exception(ˆÊÉ·
+jpython:S1542&"RRename function "getRoleToken" to match the regular expression ^[a-z_][a-z0-9_]*$.(áâÌŒ
+wpython:S15422"SRename function "getAllDoublon" to match the regular expression ^[a-z_][a-z0-9_]*$.(ÊˆÅíüÿÿÿÿ8©Ÿ†öÉ0
+wpython:S1542A"_Rename function "getDerniereHeureDeCoupure" to match the regular expression ^[a-z_][a-z0-9_]*$.(‰±Àî
+>python:S125”"Remove this commented out code.(¾ç»8©Ÿ†öÉ0
+Cpython:S125–"Remove this commented out code.(ó¬Ù×üÿÿÿÿ8©Ÿ†öÉ0
+>python:S125œ"Remove this commented out code.(º¢¾Ä8©Ÿ†öÉ0
+upython:S1542¶"URename function "pathMaintenance" to match the regular expression ^[a-z_][a-z0-9_]*$.(÷øãù8©Ÿ†öÉ0

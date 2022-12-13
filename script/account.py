@@ -5,14 +5,14 @@ import os
 from http import HTTPStatus
 from script.conf import get_ip_address, log_app
 
-CLIENT_ID = configuration()['CLIENT_ID']
-CLIENT_SECRET = configuration()['CLIENT_SECRET']
-GRANT_TYPE = configuration()['GRANT_TYPE']
-URI = configuration()['URI']
-URI_USER = configuration()['URI_USER']
-URI_ROLES = configuration()['URI_ROLES']
-REALM = configuration()['REALM']
-URI_BASE = configuration()['URI_BASE']
+CLIENT_ID = configuration('CLIENT_ID')
+CLIENT_SECRET = configuration('CLIENT_SECRET')
+GRANT_TYPE = configuration('GRANT_TYPE')
+URI = configuration('URI')
+URI_USER = configuration('URI_USER')
+URI_ROLES = configuration('URI_ROLES')
+REALM = configuration('REALM')
+URI_BASE = configuration('URI_BASE')
 
 
 # fonction admin_token

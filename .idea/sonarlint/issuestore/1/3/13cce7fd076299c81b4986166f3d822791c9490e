@@ -1,0 +1,93 @@
+
+jpython:S1192"JDefine a constant instead of duplicating this literal 'Bearer {}' 9 times.(èù¦Ï8†şÙ€Ê0
+mpython:S1192Â"ODefine a constant instead of duplicating this literal "event.message" 16 times.(Ö…²õşÿÿÿÿ
+jpython:S1192Ã"LDefine a constant instead of duplicating this literal "process.id" 16 times.(áİÀÿÿÿÿÿ
+lpython:S1192é"GDefine a constant instead of duplicating this literal 'Error ' 5 times.(áÑ¦¡øÿÿÿÿ8ˆşÙ€Ê0
+jpython:S1192¿"JDefine a constant instead of duplicating this literal "url.path" 16 times.(Û¡ £8‰şÙ€Ê0
+upython:S1192ğ"UDefine a constant instead of duplicating this literal '/role-mappings/realm' 5 times.(Ê”€¬8‰şÙ€Ê0
+npython:S1192–"ODefine a constant instead of duplicating this literal "invalid token" 30 times.(Âı¬38ŠşÙ€Ê0
+npython:S1192×"NDefine a constant instead of duplicating this literal ' de username ' 3 times.(Ÿ†ª»8‹şÙ€Ê0
+mpython:S1192–"MDefine a constant instead of duplicating this literal "invalid user" 8 times.(ÙŞ‰¾8ŒşÙ€Ê0
+dpython:S1192Á"KDefine a constant instead of duplicating this literal "client.ip" 16 times.(µ®¬À
+opython:S1192÷"ODefine a constant instead of duplicating this literal "User Not Found" 3 times.(ÎáÄ”8şÙ€Ê0
+spython:S1192À"UDefine a constant instead of duplicating this literal "http.request.method" 16 times.(ÁíÇ¦ıÿÿÿÿ
+Lpython:S1135"4Complete the task associated to this "TODO" comment.(òß¶«
+npython:S117f"RRename this parameter "userId" to match the regular expression ^[_a-z][a-z0-9_]*$.(¬»©Åøÿÿÿÿ
+qpython:S1542f"TRename function "testActivation" to match the regular expression ^[a-z_][a-z0-9_]*$.(¬»©Åøÿÿÿÿ
+Hpython:S1481h"+Remove the unused local variable "headers".(Û¨ªÒúÿÿÿÿ
+Tpython:S5754r"<Specify an exception class to catch or reraise the exception(ˆÊÉ·
+;python:S125n"Remove this commented out code.(ÛìÂµøÿÿÿÿ
+upython:S117y"WRename this local variable "userId" to match the regular expression ^[_a-z][a-z0-9_]*$.(‚úä²8şÙ€Ê0
+qpython:S1542w"SRename function "testGetUserId" to match the regular expression ^[a-z_][a-z0-9_]*$.(éá,8şÙ€Ê0
+Tpython:S1481ƒ"/Remove the unused local variable "tokens_data".(ˆ–à†ıÿÿÿÿ8şÙ€Ê0
+\python:S5754"<Specify an exception class to catch or reraise the exception(ˆÊÉ·8şÙ€Ê0
+=python:S125Œ"Remove this commented out code.(•»&8‘şÙ€Ê0
+Ipython:S1481")Remove the unused local variable "token".(°·“î8‘şÙ€Ê0
+Lpython:S1481–",Remove the unused local variable "response".(ÂÜËæ8‘şÙ€Ê0
+\python:S5754¦"<Specify an exception class to catch or reraise the exception(ˆÊÉ·8’şÙ€Ê0
+>python:S125—"Remove this commented out code.(½ı°§8’şÙ€Ê0
+python:S1542¬"\Rename function "testGetTokenUserSimple" to match the regular expression ^[a-z_][a-z0-9_]*$.(ó¦ì„ùÿÿÿÿ8“şÙ€Ê0
+epython:S4830µ"@Enable server certificate validation on this SSL/TLS connection.(îÁô‚ıÿÿÿÿ8”şÙ€Ê0
+vpython:S117¼"RRename this parameter "userId" to match the regular expression ^[_a-z][a-z0-9_]*$.(¥£•şÿÿÿÿ8”şÙ€Ê0
+vpython:S1542¼"QRename function "GetUserByID" to match the regular expression ^[a-z_][a-z0-9_]*$.(¥£•şÿÿÿÿ8•şÙ€Ê0
+=python:S125À"Remove this commented out code.(ğÌ¯R8•şÙ€Ê0
+>python:S125Ä"Remove this commented out code.(ä›¥õ8•şÙ€Ê0
+Cpython:S125Ï"Remove this commented out code.(Ôœ§Âøÿÿÿÿ8–şÙ€Ê0
+>python:S125ã"Remove this commented out code.(Û’Å8–şÙ€Ê0
+vpython:S117ë"RRename this parameter "userId" to match the regular expression ^[_a-z][a-z0-9_]*$.(‘åö÷üÿÿÿÿ8–şÙ€Ê0
+vpython:S1542ë"QRename function "GetInfoUser" to match the regular expression ^[a-z_][a-z0-9_]*$.(‘åö÷üÿÿÿÿ8—şÙ€Ê0
+<python:S125ï"Remove this commented out code.(ÄÄÙäúÿÿÿÿ
+ƒpython:S117½"_Rename this local variable "messageLogging" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÉºêÛøÿÿÿÿ8—şÙ€Ê0
+qpython:S1542†"QRename function "GetAllUsers" to match the regular expression ^[a-z_][a-z0-9_]*$.(—Œºõ8˜şÙ€Ê0
+tpython:S3776†"TRefactor this function to reduce its Cognitive Complexity from 21 to the 15 allowed.(—Œºõ8˜şÙ€Ê0
+>python:S125”"Remove this commented out code.(ûÛŠ•8™şÙ€Ê0
+>python:S125×"Remove this commented out code.(ûÛŠ•8™şÙ€Ê0
+~python:S117‚"_Rename this local variable "messageLogging" to match the regular expression ^[_a-z][a-z0-9_]*$.(ŸÙúé8™şÙ€Ê0
+qpython:S117Ş"RRename this parameter "userId" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÑÒı8šşÙ€Ê0
+qpython:S1542Ş"QRename function "GetOnlyUser" to match the regular expression ^[a-z_][a-z0-9_]*$.(ÑÒı8šşÙ€Ê0
+tpython:S3776Ş"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(ÑÒı8›şÙ€Ê0
+ƒpython:S117Ö"_Rename this local variable "messageLogging" to match the regular expression ^[_a-z][a-z0-9_]*$.(°Â¢Óûÿÿÿÿ8›şÙ€Ê0
+ppython:S1542Ÿ"PRename function "CreateUser" to match the regular expression ^[a-z_][a-z0-9_]*$.(á¯ı¯8›şÙ€Ê0
+Opython:S1481Í"*Remove the unused local variable "donnee".(ıì¹“úÿÿÿÿ8œşÙ€Ê0
+tpython:S3776Ÿ"TRefactor this function to reduce its Cognitive Complexity from 21 to the 15 allowed.(á¯ı¯8œşÙ€Ê0
+>python:S125¹"Remove this commented out code.(ö¥¿¯8şÙ€Ê0
+>python:S125Ë"Remove this commented out code.(ûÛŠ•8şÙ€Ê0
+>python:S125â"Remove this commented out code.(³âœÉ8şÙ€Ê0
+~python:S117¦"_Rename this local variable "messageLogging" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÙÏäê8şÙ€Ê0
+qpython:S117î"RRename this parameter "userId" to match the regular expression ^[_a-z][a-z0-9_]*$.(¦ÜÑì8şÙ€Ê0
+ppython:S1542î"PRename function "UpdateUser" to match the regular expression ^[a-z_][a-z0-9_]*$.(¦ÜÑì8ŸşÙ€Ê0
+Opython:S1481Ÿ"/Remove the unused local variable "token_admin".(‰Æß8ŸşÙ€Ê0
+tpython:S3776î"TRefactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.(¦ÜÑì8ŸşÙ€Ê0
+Ypython:S1135"4Complete the task associated to this "TODO" comment.(¤ó¨òúÿÿÿÿ8 şÙ€Ê0
+ƒpython:S117ò"_Rename this local variable "messageLogging" to match the regular expression ^[_a-z][a-z0-9_]*$.(¤®¡–ÿÿÿÿÿ8¡şÙ€Ê0
+vpython:S117Ç"RRename this parameter "userId" to match the regular expression ^[_a-z][a-z0-9_]*$.(ß´™Œıÿÿÿÿ8¡şÙ€Ê0
+|python:S1542Ç"WRename function "EnableDisableUser" to match the regular expression ^[a-z_][a-z0-9_]*$.(ß´™Œıÿÿÿÿ8¢şÙ€Ê0
+Opython:S1481è"/Remove the unused local variable "token_admin".(‰Æß8£şÙ€Ê0
+ypython:S3776Ç"TRefactor this function to reduce its Cognitive Complexity from 23 to the 15 allowed.(ß´™Œıÿÿÿÿ8£şÙ€Ê0
+Npython:S1940ğ")Use the opposite operator ("!=") instead.(© ÿÿÿÿÿ8¤şÙ€Ê0
+ƒpython:S117ª"_Rename this local variable "messageLogging" to match the regular expression ^[_a-z][a-z0-9_]*$.(‰ó×ÿÿÿÿÿ8¥şÙ€Ê0
+vpython:S117Œ"RRename this parameter "userId" to match the regular expression ^[_a-z][a-z0-9_]*$.(Ú«´Ôÿÿÿÿÿ8¥şÙ€Ê0
+upython:S1542Œ"PRename function "DeleteUser" to match the regular expression ^[a-z_][a-z0-9_]*$.(Ú«´Ôÿÿÿÿÿ8¦şÙ€Ê0
+Opython:S1481¨"/Remove the unused local variable "token_admin".(‰Æß8§şÙ€Ê0
+ypython:S3776Œ"TRefactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.(Ú«´Ôÿÿÿÿÿ8§şÙ€Ê0
+~python:S117ú"_Rename this local variable "messageLogging" to match the regular expression ^[_a-z][a-z0-9_]*$.(å™8¨şÙ€Ê0
+ppython:S1542Ï"PRename function "AllProfils" to match the regular expression ^[a-z_][a-z0-9_]*$.(¶¾8©şÙ€Ê0
+tpython:S3776Ï"TRefactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.(¶¾8©şÙ€Ê0
+>python:S125î"Remove this commented out code.(¤®Ñì8ªşÙ€Ê0
+~python:S117Á"_Rename this local variable "messageLogging" to match the regular expression ^[_a-z][a-z0-9_]*$.(ŸÕñœ8ªşÙ€Ê0
+xpython:S1542˜"SRename function "CreateProfils" to match the regular expression ^[a-z_][a-z0-9_]*$.(Â¢Î½şÿÿÿÿ8«şÙ€Ê0
+ypython:S3776˜"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(Â¢Î½şÿÿÿÿ8«şÙ€Ê0
+Ypython:S1135°"4Complete the task associated to this "TODO" comment.( äÖßıÿÿÿÿ8¬şÙ€Ê0
+>python:S125¾"Remove this commented out code.(¤®Ñì8­şÙ€Ê0
+Cpython:S125Ì"Remove this commented out code.(°·Şûÿÿÿÿ8­şÙ€Ê0
+ƒpython:S117ü"_Rename this local variable "messageLogging" to match the regular expression ^[_a-z][a-z0-9_]*$.(¸–°©øÿÿÿÿ8®şÙ€Ê0
+qpython:S117Ö"RRename this parameter "userId" to match the regular expression ^[_a-z][a-z0-9_]*$.(åÃ‘²8®şÙ€Ê0
+npython:S1542Ö"NRename function "UserRole" to match the regular expression ^[a-z_][a-z0-9_]*$.(åÃ‘²8¯şÙ€Ê0
+tpython:S3776Ö"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(åÃ‘²8°şÙ€Ê0
+Ypython:S1135ö"4Complete the task associated to this "TODO" comment.(²˜™’øÿÿÿÿ8°şÙ€Ê0
+~python:S117²"_Rename this local variable "messageLogging" to match the regular expression ^[_a-z][a-z0-9_]*$.(¢¡í‚8±şÙ€Ê0
+qpython:S117Å"RRename this parameter "userId" to match the regular expression ^[_a-z][a-z0-9_]*$.(Ê¹ÈÈ8±şÙ€Ê0
+vpython:S1542Å"VRename function "DeleteProfilUser" to match the regular expression ^[a-z_][a-z0-9_]*$.(Ê¹ÈÈ8²şÙ€Ê0
+Ppython:S1481Õ"+Remove the unused local variable "reponse".(úÚÍ›üÿÿÿÿ8²şÙ€Ê0
+vpython:S117Ù"RRename this parameter "userId" to match the regular expression ^[_a-z][a-z0-9_]*$.(µø«ñúÿÿÿÿ8³şÙ€Ê0
+qpython:S117ñ"RRename this parameter "userId" to match the regular expression ^[_a-z][a-z0-9_]*$.(Â‹ÇÔ8³şÙ€Ê0

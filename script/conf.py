@@ -14,10 +14,19 @@ class YactConfig(Config):
             self[section.upper()] = config[section]
 
 # fonction configuration
-def configuration():
-    with open(os.path.dirname(os.path.abspath(__file__)) + '/config.yaml', "r") as ymlfile:
-        cfg = yaml.load(ymlfile.read(), Loader=yaml.FullLoader)
-        return cfg
+# def configuration():
+#     with open(os.path.dirname(os.path.abspath(__file__)) + '/config.yaml', "r") as ymlfile:
+#         cfg = yaml.load(ymlfile.read(), Loader=yaml.FullLoader)
+#         return cfg
+
+def configuration(key):
+    with open(os.path.dirname(os.path.abspath(__file__)) + '/config.yaml', "r") as parameters:
+        dict = yaml.safe_load(parameters)
+        key = dict[key]
+        if key is not None and key != "":
+            return key
+        else:
+            return "ErrorKey: Key is Null"
 
 # fonction add_headers
 def add_headers(response):
@@ -69,7 +78,7 @@ def select_query(query):
     try:
         con = connect()
         df = pd.read_sql(query, con)
-        data = df.to_dict(orient='records')
+        data = df.to_json(orient='records')
         con.commit()
     except(Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -92,7 +101,8 @@ def select_query_argument(query, numero=None):
         try:
             con = connect()
             df = pd.read_sql(query.format(numero), con)
-            data = df.to_dict(orient='records')
+            #data = df.to_dict(orient='records')
+            data = df.to_json(orient='records')
             con.commit()
         except(Exception, psycopg2.DatabaseError) as error:
             print(error)
@@ -103,6 +113,26 @@ def select_query_argument(query, numero=None):
     else:
         return {"message": "la fonction manque un argument : numero"}
 
+# Fonction with two argument
+def select_query_two_arg(query, arg1=None, arg2=None):
+    #data = None
+    if arg1 is not None or arg1 == "" or arg2 is not None or arg2 == "" :
+        try:
+            #duree = arg2 - arg1
+            con = connect()
+            df = pd.read_sql(query.format(arg1, arg2), con)
+            data = df.to_json(orient='records')
+
+            con.commit()
+        except(Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if con is not None:
+                con.close()
+        return data
+    else:
+        return {"Error": "Verifier les arguments entrées !!!"}
+
 # fonction select avec plusieurs arguments
 def select_query_date_between(query, arg1=None, arg2=None, arg3=None):
     #data = None
@@ -111,7 +141,7 @@ def select_query_date_between(query, arg1=None, arg2=None, arg3=None):
             #duree = arg2 - arg1
             con = connect()
             df = pd.read_sql(query.format(arg1, arg2, arg3), con)
-            data = df.to_dict(orient='records')
+            data = df.to_json(orient='records')
             con.commit()
         except(Exception, psycopg2.DatabaseError) as error:
             print(error)
@@ -123,8 +153,11 @@ def select_query_date_between(query, arg1=None, arg2=None, arg3=None):
         return {"Error": "Verifier les arguments entrées !!!"}
 
 
-NAME_DB = configuration()["NAME_DB"]
-USER_DB = configuration()["USER_DB"]
-PASSWORD_DB = configuration()["PASSWORD_DB"]
-HOST_DB = configuration()["HOST_DB"]
-PORT_DB = configuration()["PORT_DB"]
+NAME_DB = configuration("NAME_DB")
+USER_DB = configuration("USER_DB")
+PASSWORD_DB = configuration("PASSWORD_DB")
+HOST_DB = configuration("HOST_DB")
+PORT_DB = configuration("PORT_DB")
+
+if __name__ == '__main__':
+    print(NAME_DB, USER_DB, PASSWORD_DB, HOST_DB, PORT_DB)

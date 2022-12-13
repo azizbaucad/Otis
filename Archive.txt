@@ -1,0 +1,161 @@
+# API permettant de faire l'historisation
+@app.route('/historiqueinventaire', methods=['GET'])
+def HistoryInventary():
+    con = connect()
+    cursor = con.cursor()
+    query = '''
+                select   pon, slot, nom_olt,  count(distinct service_id) as NombreDeNumero
+                         from inventaireglobal_ftth group by  nom_olt, pon, slot
+            '''
+    data_ = pd.read_sql(query, con)
+    print('------------------Le dataFrame renvoyé est------------------------')
+    # print(data_)
+    my_dict = data_.to_dict(orient='records')
+    df = pd.DataFrame(data=my_dict)
+    i = 0
+    for row in df.itertuples():
+        # print(row)
+        cursor.execute(
+            '''
+                INSERT INTO inventaireglobalhistory_ftth (pon, slot, nom_olt, nombre_de_numero)
+                                                         VALUES (%s, %s, %s, %s)  ''',
+            (row.pon, row.slot, row.nom_olt, row.nombredenumero),
+        )
+        con.commit()
+        print(i)
+        i = i + 1
+        print("Inserted is running ..........................")
+    print("Inserted")
+    # print(row.pon)
+    # print('----------------remplissage de la table-------------------')
+    # df.to_sql(con=connect, name='inventaireglobalhistory_ftth', if_exists='append', index=False)
+    # print('----------------------res envoye----------------------')
+    # print(df)
+    return df
+    # print(res)
+    # for
+    # return res
+---------------------------------------------------------------------------------------------------------
+# TODO : Le bon code
+# df
+# print(df2)
+# for i, row in df2.iterrows():
+#     print(row.ND, row.NOM, row.PRENOM1, row.ETAT_DU_CLIENT, row.CONTACT_MOBILE_CLIENT, row.ACCES_RESEAU, row.LIBELLE_RSP_FO)
+
+# Transform
+# try:88
+#     lecture = csv.reader(open("script/constitution.csv", "rU", newline=None), delimiter=';')
+#     if lecture != "":
+#         print("-----------Lecture en cours.........................")
+#     ecriture = csv.writer(open("script/constitution_output.csv", 'w'), delimiter=',')
+#     if ecriture != "":
+#         print("-----------------------Ecriture en cours---------------------")
+#     print("------------Transformation en cours---------------------")
+#     ecriture.writerows(lecture)
+#     print("Ecriture resussi...............")
+#     if ecriture.writerows(lecture) != "":
+#         print("Ecriture.................................")
+#
+# except:
+#     print("---------------Tranformation impossible-----------------------------------------")
+--------------------------------------------------------------------------------------------------
+# Algorithme du CRON
+#date_start = datetime.datetime(2022, 11, 14, 9, 30)
+date_start = datetime.datetime.now()
+interval_stop = datetime.timedelta(minutes=1) # stopper apres 1 minutes
+#date_end = datetime.datetime(2022, 11, 14, 9, 35)
+date_end = date_start + interval_stop
+interval_sleep = datetime.timedelta(seconds=10)
+print(f"date_start : {date_start} , date_end : {date_end}, interval_to_stop : {interval_stop}, interval_to_sleep: {interval_sleep}")
+while date_start:
+    print('running........')
+    configurationClientsHuawei('338686375')
+    time.sleep(10)
+    date_start = date_start + interval_sleep
+    #print(f"date start is now : {date_start}")
+    if date_start > date_end or date_start == date_end:
+        print("End of Execution.......")
+        break
+
+---- Use case metric
+jointure entre la table inventaireglobal_network_bis and metric_seytu_network
+
+--- Use case monitoring
+Pou
+-------------------------------------------------------------------------------------------
+def insert_constitution():
+    con = connect()
+    cursor = con.cursor()
+    df = pd.read_csv("script/constitution_output.csv", sep=",", error_bad_lines=False, encoding_errors='ignore',
+                     engine='python')
+    for index, row in df.iterrows():
+        cursor.execute(
+            ''' 
+                INSERT INTO parc_constitution_ftth (nd, nom, prenom, etat_client, contact_mobile_client, acces_reseau, libelle_rsp_fo )
+                                                         VALUES (%s, %s, %s, %s, %s, %s, %s)  ''',
+            (row.ND, row.NOM, row.PRENOM1, row.ETAT_DU_CLIENT, row.CONTACT_MOBILE_CLIENT, row.ACCES_RESEAU,
+             row.LIBELLE_RSP_FO),
+        )
+        con.commit()
+        print(
+            '...Insertion en cours............................................................................................................')
+    con.commit()
+    cursor.close()
+
+-------------------------------------Documentattion Swagger--------------------------------------------------
+from flask_restx import Api, Resource, reqparse
+
+warnings.filterwarnings("ignore")  # Ignorer les warnings
+app = Flask(__name__)
+CORS(app)
+
+api = Api(app=app, version='2.0', title='Saytu Api', description='Documentation Saytu Network', validate=True)
+
+parser = reqparse.RequestParser()
+parser.add_argument('numero', type=str, help='Numero')
+#parser.add_argument('var2', type=str, help='variable 2')
+
+CLIENT_ID = configuration()['CLIENT_ID']
+CLIENT_SECRET = configuration()['CLIENT_SECRET']
+GRANT_TYPE = configuration()['GRANT_TYPE']
+URI = configuration()['URI']
+URI_USER = configuration()['URI_USER']
+URI_ROLES = configuration()['URI_ROLES']
+REALM = configuration()['REALM']
+URI_BASE = configuration()['URI_BASE']
+
+@api.route('/listedoublons')
+class Get_Doublon_API(Resource):
+    @api.doc(parser=parser)
+    def get(self):
+        args = parser.parse_args()
+        numero = args['numero']
+        #numero = request.args.get('numero')
+        return get_doublon(numero)
+
+@api.route('/derniereheurecoupure')
+class Get_Derniere_Heure_Coupure(Resource):
+    @api.doc(parser=parser)
+    def get(self):
+        args = parser.parse_args()
+        numero = args['numero']
+        #numero = request.args.get('numero')
+        return derniere_heure_coupure(numero)
+
+------------------PACKAGES-----------------------
+Flask==2.0.2
+Flask-Cors==3.0.10
+flask-marshmallow==0.14.0
+numpy==1.19.5
+pysnmp==4.4.12
+pandas==1.1.5
+PyJWT==2.3.0
+psycopg2==2.7.7
+requests==2.20.0
+flasgger==0.9.5
+PyYAML==3.12
+elastic-apm==6.8.1
+yact==0.5.1
+blinker==1.4
+schedule>=1.1.0
+flask-restx>=1.0.3

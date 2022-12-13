@@ -1,36 +1,42 @@
+import pandas as pd
 from flask import Flask, request, jsonify
 from http import HTTPStatus
 from script.function import getDerniereHeureDeCoupure, decodeToken, getRoleToken
 import os
 from script.conf import add_headers, truncate_query, connect, get_ip_address, log_app
-from script.main_function import monitoring, get_doublon, get_coupure, get_historique_coupure, taux_utilisation_debit, \
+from script.main_function import get_historique_coupure_six_mois, get_historique_coupure_date_between, monitoring, create_table, get_doublon, get_coupure, get_historique_coupure, taux_utilisation_debit, \
     metric_date_between, resultat_diagnostic, recherche_elargie, derniere_heure_coupure
 from script.account import configuration, admin_token, get_token, get_token_user_admin
 import requests
 import flask
 from flask_cors import CORS
-
 import warnings
 
-# warnings.filterwarnings("ignore")  # Ignorer les warnings
+warnings.filterwarnings("ignore")  # Ignorer les warnings
 app = Flask(__name__)
 CORS(app)
 
 # Recuperation des variables
 # TODO : doit inclure le host et le port
 
-CLIENT_ID = configuration()['CLIENT_ID']
-CLIENT_SECRET = configuration()['CLIENT_SECRET']
-GRANT_TYPE = configuration()['GRANT_TYPE']
-URI = configuration()['URI']
-URI_USER = configuration()['URI_USER']
-URI_ROLES = configuration()['URI_ROLES']
-REALM = configuration()['REALM']
-URI_BASE = configuration()['URI_BASE']
+
+CLIENT_ID = configuration('CLIENT_ID')
+CLIENT_SECRET = configuration('CLIENT_SECRET')
+GRANT_TYPE = configuration('GRANT_TYPE')
+URI = configuration('URI')
+URI_USER = configuration('URI_USER')
+URI_ROLES = configuration('URI_ROLES')
+REALM = configuration('REALM')
+URI_BASE = configuration('URI_BASE')
 
 @app.route('/')
-def hello_world():  # put application's code here
-    return 'WELCOME TO Saytu Network Backend'
+def test_serveur():  # put application's code here
+    con = connect()
+    if con == None:
+        return "Erreur de serveur"
+    else:
+        return  "Serveur OK..."
+    #return 'WELCOME TO Saytu Network Backend Ceci est un Test'
 
 # Good doublons
 @app.route('/listedoublons', methods=['GET'])
@@ -55,6 +61,15 @@ def taux_utilisation_debit_api():
 def get_historique_coupure_api():
     return get_historique_coupure()
 
+# API permettant de donner l'historique des coupures entres deux dates
+@app.route('/historique_coupures_dates', methods=['GET'])
+def get_historique_coupure_date_between_api():
+    return get_historique_coupure_date_between()
+
+# API permettant d'obtenir l'historique des coupures de 6 mois
+@app.route('/historique_coupures_six_mois', methods=['GET'])
+def get_historique_coupure_six_mois_api():
+    return get_historique_coupure_six_mois()
 
 # API pemettant de faire le diagnostic à temps réels
 @app.route('/diagnosticnumero', methods=['GET'])
@@ -1023,6 +1038,8 @@ def get_info_user(userId):
     except ValueError:
         return jsonify({'status': 'Error', 'error': ValueError})
 
+#create_table()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+

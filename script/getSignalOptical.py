@@ -1,12 +1,13 @@
-from pysnmp.hlapi import *
-import datetime
+# from pysnmp.hlapi import *
+from pysnmp.hlapi import getCmd, SnmpEngine, CommunityData, UdpTransportTarget, ContextData, ObjectType, ObjectIdentity
+from datetime import datetime
 from script.function import data_inventaire
 
 
 def getOpticalSignal(serviceId):
     """ 
     fonction permettant d'avoir la puissance du signal
-    reçue par l'olt de la part de l'ont .
+    reçue par l'olt de la part de l'ont.
     Arguments:
          - serviceId: numéro de téléphone du client
          
@@ -18,6 +19,10 @@ def getOpticalSignal(serviceId):
                                 str(df[df['serviceId'] == serviceId]['ip_olt'].values[0])
 
     if vendeur == "Huawei":
+
+        #integration pour recupérer les débits
+
+        #end
 
         oid_ont = "1.3.6.1.4.1.2011.6.128.1.1.2.51.1.4" + "." + index + "." + _ont_  # oid de ontRxpower:1.3.6.1.4.1.2011.6.128.1.1.2.51.1.4
         for (errorIndication,
@@ -39,7 +44,7 @@ def getOpticalSignal(serviceId):
                     ontpower_dbm = int(ontpower) / 100
 
         # return ontpower_dbm
-        return ontpower_dbm if ontpower_dbm < 20000 else 0
+        return f'Huawei Signal ONT : {ontpower_dbm}' if ontpower_dbm < 20000 else 0
 
 
     elif vendeur == "Nokia":
@@ -69,6 +74,6 @@ def getOpticalSignal(serviceId):
 
 if __name__ == "__main__":
     start_time = datetime.now()
-    print(getOpticalSignal("338270038"))
+    print(getOpticalSignal("338689155"), type(float(getOpticalSignal("338689155"))))
     end_time = datetime.now()
-    print('Duration: {}'.format(end_time - start_time))
+    #print('Duration: {}'.format(end_time - start_time))
